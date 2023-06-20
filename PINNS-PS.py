@@ -9,12 +9,7 @@ import matplotlib.pyplot as plt
 import scipy.io
 from scipy.interpolate import griddata
 import time
-from itertools import product, combinations
-from mpl_toolkits.mplot3d import Axes3D
-from mpl_toolkits.mplot3d.art3d import Poly3DCollection
-from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib.gridspec as gridspec
-import matplotlib.pyplot as plt
 import math
 from matplotlib import cm
 from scipy import interpolate
@@ -326,8 +321,7 @@ if __name__ == "__main__":
 
     # Prediction
     u_pred, w_pred, phi_pred, n_pred = model.predict(x_star, y_star)
-    # X = model.predict(x_star, y_star)
-    # u_pred, w_pred, phi_pred, n_pred = X[:,0], X[:,1], X[:,2], X[:,3]
+
     lambda_1_value = model.sess.run(model.lambda_1)
     lambda_2_value = model.sess.run(model.lambda_2)
     lambda_3_value = model.sess.run(model.lambda_3)
@@ -408,145 +402,4 @@ if __name__ == "__main__":
     print('Error l18: %.5f%%' % (error_lambda_18))
     print('Error l19: %.5f%%' % (error_lambda_19))
     print('Error l20: %.5f%%' % (error_lambda_20))
-
-
-
-
-    #plot_contour(Coordx, Coordy, Strain, minX, maxX, minY, maxY, 1)
-    '''
-    # Plot Results
-    plot_solution(X_star, u_pred, 1)
-    plot_solution(X_star, w_pred, 2)
-    plot_solution(X_star, phi_pred, 3)
-    plot_solution(X_star, n_pred, 4)
-
-    plot_solution(X_star, w_star, 5)
-    plot_solution(X_star, w_star - w_pred, 6)
-
-    # Predict for plotting
-    lb = X_star.min(0)
-    ub = X_star.max(0)
-    nn = 200
-    x = np.linspace(lb[0], ub[0], nn)
-    y = np.linspace(lb[1], ub[1], nn)
-    X, Y = np.meshgrid(x, y)
-
-    UU_star = griddata(X_star, u_pred.flatten(), (X, Y), method='cubic')
-    WW_star = griddata(X_star, w_pred.flatten(), (X, Y), method='cubic')
-    PPhi_star = griddata(X_star, phi_pred.flatten(), (X, Y), method='cubic')
-    NN_star = griddata(X_star, n_pred.flatten(), (X, Y), method='cubic')
-    w_exact = griddata(X_star, w_star.flatten(), (X, Y), method='cubic')
-    '''
-    '''
-    ######################################################################
-    ########################### Noisy Data ###############################
-    ######################################################################
-
-    noise = 0.01
-    u_train = u_train + noise * np.std(u_train) * np.random.randn(u_train.shape[0], u_train.shape[1])
-    w_train = w_train + noise * np.std(w_train) * np.random.randn(w_train.shape[0], w_train.shape[1])
-    phi_train = phi_train + noise * np.std(phi_train) * np.random.randn(phi_train.shape[0], phi_train.shape[1])
-    n_train = n_train + noise * np.std(n_train) * np.random.randn(n_train.shape[0], n_train.shape[1])
-
-    # Training
-    model = PhysicsInformedNN(x_train, y_train, u_train, w_train, phi_train, n_train, layers)
-    model.train(10000)
-
-    u_pred_nosie, w_pred_nosie, phi_pred_nosie, n_pred_nosie = model.predict(x_star, y_star)
-
-    np.savetxt('u_pred-NOSI.txt', u_pred_nosie)
-
-    lambda_1_value_noisy = model.sess.run(model.lambda_1)
-    lambda_2_value_noisy = model.sess.run(model.lambda_2)
-    lambda_3_value_noisy = model.sess.run(model.lambda_3)
-    lambda_4_value_noisy = model.sess.run(model.lambda_4)
-    lambda_5_value_noisy = model.sess.run(model.lambda_5)
-    lambda_6_value_noisy = model.sess.run(model.lambda_6)
-    lambda_7_value_noisy = model.sess.run(model.lambda_7)
-    lambda_8_value_noisy = model.sess.run(model.lambda_8)
-
-# Error
-    error_u_nosie = np.linalg.norm(u_star - u_pred_nosie, 2) / np.linalg.norm(u_star, 2)
-    error_w_nosie = np.linalg.norm(w_star - w_pred_nosie, 2) / np.linalg.norm(w_star, 2)
-    error_phi_nosie = np.linalg.norm(phi_star - phi_pred_nosie, 2) / np.linalg.norm(phi_star, 2)
-    error_n_nosie = np.linalg.norm(n_star - n_pred_nosie, 2) / np.linalg.norm(n_star, 2)
-
-    error_lambda_1_noisy = np.abs(lambda_1_value_noisy - 0) * 100
-    error_lambda_2_noisy = np.abs(lambda_2_value_noisy - 0) * 100
-    error_lambda_3_noisy = np.abs(lambda_3_value_noisy - 0) * 100
-    error_lambda_4_noisy = np.abs(lambda_4_value_noisy - 0) * 100
-    error_lambda_5_noisy = np.abs(lambda_5_value_noisy - 0) * 100
-    error_lambda_6_noisy = np.abs(lambda_6_value_noisy - 0) * 100
-    error_lambda_7_noisy = np.abs(lambda_7_value_noisy - 0) * 100
-    error_lambda_8_noisy = np.abs(lambda_8_value_noisy - 0) * 100
-
-    print('Error u: %e' % (error_u_nosie))
-    print('Error w: %e' % (error_w_nosie))
-    print('Error phi: %e' % (error_phi_nosie))
-    print('Error n: %e' % (error_n_nosie))
-    print('Error l1: %.5f%%' % (error_lambda_1_noisy))
-    print('Error l2: %.5f%%' % (error_lambda_2_noisy))
-    print('Error l3: %.5f%%' % (error_lambda_3_noisy))
-    print('Error l4: %.5f%%' % (error_lambda_4_noisy))
-    print('Error l5: %.5f%%' % (error_lambda_5_noisy))
-    print('Error l6: %.5f%%' % (error_lambda_6_noisy))
-    print('Error l7: %.5f%%' % (error_lambda_7_noisy))
-    print('Error l8: %.5f%%' % (error_lambda_8_noisy))
-    '''
-    '''
-    ######################################################################
-    ############################# Plotting ###############################
-    ######################################################################
-    ####### Row 1: Training data ##################
-    ########      u(t,x,y)     ###################
-    gs1 = gridspec.GridSpec(1, 2)
-    gs1.update(top=1 - 2 / 4, bottom=0.0, left=0.01, right=0.99, wspace=0)
-    ax = plt.subplot(gs1[:, 0], projection='3d')
-    ax.axis('off')
-
-    r1 = [x_star.min(), x_star.max()]
-    r2 = [y_star.min(), y_star.max()]
-
-    for s, e in combinations(np.array(list(product(r1, r2))), 2):
-        if np.sum(np.abs(s - e)) == r1[1] - r1[0] or np.sum(np.abs(s - e)) == \
-                r2[1] - r2[0]:
-            ax.plot3D(*zip(s, e), color="k", linewidth=0.5)
-
-    ax.scatter(x_train, y_train, s=0.1)
-    ax.contourf(X, UU_star, Y, zdir='y', cmap='rainbow', alpha=0.8)
-
-    ax.text(x_star.mean(), data['t'].min() - 1, y_star.min() - 1, '$x$')
-    ax.text(x_star.max() + 1, data['t'].mean(), y_star.min() - 1, '$t$')
-    ax.text(x_star.min() - 1, data['t'].min() - 0.5, y_star.mean(), '$y$')
-    ax.text(x_star.min() - 3, data['t'].mean(), y_star.max() + 1, '$u(t,x,y)$')
-    ax.set_xlim2d(r1)
-    ax.set_ylim2d(r2)
-    axisEqual3D(ax)
-
-    ########      v(t,x,y)     ###################
-    ax = plt.subplot(gs1[:, 1], projection='3d')
-    ax.axis('off')
-
-    r1 = [x_star.min(), x_star.max()]
-    r3 = [y_star.min(), y_star.max()]
-
-    for s, e in combinations(np.array(list(product(r1, r2, r3))), 2):
-        if np.sum(np.abs(s - e)) == r1[1] - r1[0] or np.sum(np.abs(s - e)) == \
-                r3[1] - r3[0]:
-            ax.plot3D(*zip(s, e), color="k", linewidth=0.5)
-
-    ax.scatter(x_train, y_train, s=0.1)
-    ax.contourf(X, WW_star, Y, zdir='y', cmap='rainbow', alpha=0.8)
-
-    ax.text(x_star.mean(), data['t'].min() - 1, y_star.min() - 1, '$x$')
-    ax.text(x_star.max() + 1, data['t'].mean(), y_star.min() - 1, '$t$')
-    ax.text(x_star.min() - 1, data['t'].min() - 0.5, y_star.mean(), '$y$')
-    ax.text(x_star.min() - 3, data['t'].mean(), y_star.max() + 1, '$v(t,x,y)$')
-    ax.set_xlim3d(r1)
-    ax.set_ylim3d(r2)
-    ax.set_zlim3d(r3)
-    axisEqual3D(ax)
-
-    savefig('./figures/PS_data')
-    '''
-
+   
