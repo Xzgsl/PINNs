@@ -53,7 +53,7 @@ class PhysicsInformedNN:
         self.weights, self.biases = self.initialize_NN(layers)
 
         # Initialize parameters
-        '''
+
         self.lambda_1 = tf.Variable([0.0], dtype=tf.float32)
         self.lambda_2 = tf.Variable([0.0], dtype=tf.float32)
         self.lambda_3 = tf.Variable([0.0], dtype=tf.float32)
@@ -74,28 +74,6 @@ class PhysicsInformedNN:
         self.lambda_18 = tf.Variable([0.0], dtype=tf.float32)
         self.lambda_19 = tf.Variable([0.0], dtype=tf.float32)
         self.lambda_20 = tf.Variable([0.0], dtype=tf.float32)
-        '''
-
-        self.lambda_1 = tf.Variable([108.0], dtype=tf.float32)
-        self.lambda_2 = tf.Variable([34.5], dtype=tf.float32)
-        self.lambda_3 = tf.Variable([123.0], dtype=tf.float32)
-        self.lambda_4 = tf.Variable([33.0], dtype=tf.float32)
-        self.lambda_5 = tf.Variable([664.0], dtype=tf.float32)
-        self.lambda_6 = tf.Variable([211.0], dtype=tf.float32)
-        self.lambda_7 = tf.Variable([751.0], dtype=tf.float32)
-        self.lambda_8 = tf.Variable([201.0], dtype=tf.float32)
-        self.lambda_9 = tf.Variable([-0.064], dtype=tf.float32)
-        self.lambda_10 = tf.Variable([-0.07643], dtype=tf.float32)
-        self.lambda_11 = tf.Variable([0.176], dtype=tf.float32)
-        self.lambda_12 = tf.Variable([1.08e-11], dtype=tf.float32)
-        self.lambda_13 = tf.Variable([1.49e-11], dtype=tf.float32)
-        self.lambda_14 = tf.Variable([2.2], dtype=tf.float32)
-        self.lambda_15 = tf.Variable([0.427], dtype=tf.float32)
-        self.lambda_16 = tf.Variable([825.0], dtype=tf.float32)
-        self.lambda_17 = tf.Variable([-2.28e-9], dtype=tf.float32)
-        self.lambda_18 = tf.Variable([6.27e-9], dtype=tf.float32)
-        self.lambda_19 = tf.Variable([-8.0e-10], dtype=tf.float32)
-        self.lambda_20 = tf.Variable([2.72e-9], dtype=tf.float32)
 
 
         # tf placeholders and graph
@@ -188,11 +166,6 @@ class PhysicsInformedNN:
         lambda_18 = self.lambda_18
         lambda_19 = self.lambda_19
         lambda_20 = self.lambda_20
-
-        # u = self.neural_net(tf.concat([x, y],1), self.weights, self.biases)
-        # w = self.neural_net(tf.concat([x, y],1), self.weights, self.biases)
-        # phi = self.neural_net(tf.concat([x, y],1), self.weights, self.biases)
-        # n = self.neural_net(tf.concat([x, y],1), self.weights, self.biases)
 
         res = self.neural_net(tf.concat([x, y],1), self.weights, self.biases)
         u = res[:,0:1]
@@ -308,9 +281,9 @@ class PhysicsInformedNN:
 
 if __name__ == "__main__":
 
-    N_train = 200
+    N_train = 5000
 
-    layers = [2, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 4]
+    layers = [2, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 20, 4]
 
     # Load Data
     data = scipy.io.loadmat('../Data/carrierlinear2D-yibian-DATA-mesh660-pressure-1e5-norm.mat')
