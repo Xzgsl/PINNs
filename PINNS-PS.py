@@ -253,23 +253,6 @@ class PhysicsInformedNN:
         n_star = self.sess.run(self.n_pred, tf_dict)
 
         return u_star, w_star, phi_star, n_star
-        # return self.sess.run(self.u_pred, tf_dict)
-
-    def plot_solution(X_star, u_star, index):
-        lb = X_star.min(0)
-        ub = X_star.max(0)
-        nn = 200
-        x = np.linspace(lb[0], ub[0], nn)
-        y = np.linspace(lb[1], ub[1], nn)
-        X, Y = np.meshgrid(x, y)
-
-        U_star = griddata(X_star, u_star.flatten(), (X, Y), method='cubic')
-
-        plt.figure(index)
-        plt.pcolor(X, Y, U_star, cmap='jet')
-        plt.colorbar()
-
-        plt.show()
 
 if __name__ == "__main__":
 
@@ -280,22 +263,22 @@ if __name__ == "__main__":
     # Load Data
     data = scipy.io.loadmat('../Data/carrierlinear2D-yibian-DATA-mesh660-pressure-1e5-norm.mat')
 
-    U_star = data['U']  # 5000x1
-    W_star = data['W']  # 5000x1
-    Phi_star = data['PHI'] # 5000x1
-    N_star = data['N'] # 5000x1
-    X_star = data['XY5000']  # 5000 x 2
+    U_star = data['U'] 
+    W_star = data['W'] 
+    Phi_star = data['PHI']
+    N_star = data['N'] 
+    X_star = data['XY5000'] 
 
     N = X_star.shape[0]
 
     # Rearrange Data
-    x = X_star[:, 0:1]  # N x 1
-    y = X_star[:, 1:2] # N x 1
+    x = X_star[:, 0:1]
+    y = X_star[:, 1:2]
 
-    u = U_star  # N x 1
-    w = W_star  # N x 1
-    phi = Phi_star  # N x 1
-    n = N_star  # N x 1
+    u = U_star 
+    w = W_star
+    phi = Phi_star
+    n = N_star
 
     # Training Data
     idx = np.random.choice(N, N_train, replace=False)
@@ -347,7 +330,6 @@ if __name__ == "__main__":
     np.savetxt('w_pred.txt', w_pred)
     np.savetxt('phi_pred.txt', phi_pred)
     np.savetxt('n_pred.txt', n_pred)
-    #np.savetxt('loss.txt', LOSS)
 
 
     # Error
